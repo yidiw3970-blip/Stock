@@ -1,0 +1,8 @@
+ticker,company,theme,layer,sub_layer,downstream_link,bottleneck_type,replaceability,capacity_constraint,main_risk
+NVDA,NVIDIA,AI Compute,GPU/Accelerator,GPU,AI data center capex,compute platform,medium,high,valuation/export control
+AVGO,Broadcom,AI Networking,ASIC/Networking,Custom ASIC,AI cluster networking,networking bottleneck,medium,high,customer concentration
+MU,Micron,AI Memory,HBM,Memory,NVIDIA/AI accelerator demand,memory bottleneck,medium,high,memory cycle
+COHR,Coherent,AI Optical,Optical/CPO,Optical components,AI cluster optical demand,optical bottleneck,medium,medium,cyclicality
+LITE,Lumentum,AI Optical,Optical/CPO,Optical components,AI cluster optical demand,optical bottleneck,medium,medium,customer demand
+VST,Vistra,AI Power,Power,Generation,AI data center power demand,power bottleneck,low,high,regulation/valuation
+CEG,Constellation Energy,AI Power,Nuclear,Power generation,AI data center power demand,power bottleneck,low,high,regulation/valuation

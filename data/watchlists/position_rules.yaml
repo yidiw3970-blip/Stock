@@ -1,0 +1,30 @@
+research_only: true
+not_financial_advice: true
+no_auto_trading: true
+
+max_single_position_pct: 0.10
+
+drawdown_comfort_test:
+  enabled: true
+  lookback_days: 63
+  max_research_drawdown_pct: 0.15
+  action: "Flag for research review when simulated drawdown exceeds comfort threshold."
+
+entry_rules:
+  - name: evidence_gate
+    scope: research_simulation_only
+    description: "Allow a candidate into a simulated research basket only after hypothesis, data source, and validation plan are documented."
+  - name: freshness_gate
+    scope: research_simulation_only
+    description: "Require data freshness and missing-data checks before using a candidate in research simulation."
+
+avoid_rules:
+  - name: missing_data
+    scope: research_simulation_only
+    description: "Exclude or flag candidates when required data is missing, stale, or unverifiable."
+  - name: unsupported_thesis
+    scope: research_simulation_only
+    description: "Exclude or flag candidates when the thesis has no measurable feature definition or fails validation."
+  - name: execution_boundary
+    scope: project_boundary
+    description: "Do not generate live orders, broker instructions, or buy/sell recommendations."
