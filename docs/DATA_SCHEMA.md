@@ -134,6 +134,19 @@ Future workflow automation can add:
 
 Automation must preserve the distinction between observed data, manual hypotheses, derived features, validation results, and interpretation.
 
+## Loader Validation
+
+The first loader module is `src/stock_alpha_lab/data_sources/universe.py`.
+
+Current validation behavior:
+
+- `load_supply_chain_map`: checks required columns, uppercases non-empty tickers, removes duplicate tickers while keeping the first row, and validates `replaceability` and `capacity_constraint` as `low`, `medium`, or `high`.
+- `load_thesis_tracker`: checks required columns, uppercases tickers, validates `source_style` as `serenity`, `jackal`, or `manual`, validates `conviction` and `evidence_level` as integers from 1 to 5, and parses `date`.
+- `load_market_regime`: checks required columns and parses `date`.
+- `load_position_rules`: reads YAML with `yaml.safe_load`, requires a mapping, and checks required research-rule keys.
+
+These checks are data hygiene checks only. Passing loader validation does not mean a thesis or universe member has statistical support.
+
 ## Data Quality Notes
 
 - Do not fabricate missing values.
