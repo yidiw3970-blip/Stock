@@ -1,0 +1,2 @@
+[console_scripts]
+stock-alpha-lab = stock_alpha_lab.cli:main

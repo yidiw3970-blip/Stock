@@ -1,0 +1,15 @@
+pandas
+numpy
+scipy
+statsmodels
+scikit-learn
+yfinance
+duckdb
+streamlit
+plotly
+python-dotenv
+pyyaml
+
+[dev]
+pytest
+ruff
