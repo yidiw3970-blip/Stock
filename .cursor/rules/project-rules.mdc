@@ -1,0 +1,40 @@
+---
+description: Core project rules for stock-alpha-lab
+globs: "**/*"
+alwaysApply: true
+---
+
+# Project Rules
+
+stock-alpha-lab is a local-first Python research platform for quantitative stock factor research. It is not an automated trading system, not a signal-selling system, and not an investment advice product.
+
+## Required Behavior
+
+- Use Chinese for explanations to the project owner unless they ask for another language.
+- Write code comments, docstrings, and inline technical comments in English.
+- Make small, reviewable changes. Each development step should be easy to inspect and commit.
+- After each step, report the files that changed.
+- Prefer explicit, boring, reproducible code over clever abstractions.
+- Keep research logic auditable from raw input through feature output and validation result.
+
+## Hard Limits
+
+- Never hardcode API keys, credentials, tokens, or account identifiers.
+- Never fabricate financial data, market data, fundamentals, news data, or model outputs.
+- Never add broker integrations, order placement, automated execution, or trade management.
+- Never output buy/sell/hold instructions or portfolio allocation advice.
+- Never let creator commentary override data validation.
+
+## Data Policy
+
+- Missing data must remain missing or be handled by a documented imputation rule.
+- All external data must have source, retrieval time, license/usage notes when known, and refresh assumptions.
+- Any derived dataset must record the upstream inputs and transformation version.
+- Research outputs must distinguish observed data, derived features, statistical results, and interpretation.
+
+## Documentation Policy
+
+- Document assumptions before implementation when they affect research validity.
+- Keep README and docs aligned with project scope.
+- Any new module that changes research semantics should update the relevant docs.
+

@@ -1,0 +1,40 @@
+---
+description: Quant research and validation rules
+globs: "**/*.py,**/*.ipynb,docs/**/*.md,README.md"
+alwaysApply: true
+---
+
+# Quant Rules
+
+The project may use public market narratives as alpha hypothesis sources, but statistical evidence must decide whether a feature is useful.
+
+## Hypothesis Sources
+
+- Serenity Lens style ideas may inspire themes such as AI and semiconductor supply-chain bottlenecks, upstream constraints, CPO, HBM, InP, Neocloud, power infrastructure, and robotics.
+- JACKAL Lens style ideas may inspire regime and market-tempo features such as SPY/QQQ/SMH trend state, relative strength, pullback quality, breadth, volatility, and comfort-zone exposure.
+- These sources are idea generators only. They are not labels, ground truth, rankings, or authority.
+
+## Factor Requirements
+
+- Define the economic or behavioral hypothesis before coding the feature.
+- Define the investable universe, rebalance frequency, holding horizon, sector handling, and liquidity filters.
+- Avoid subjective manual scores. If judgment is needed, convert it into observable inputs and document the transformation.
+- Track the feature timestamp and confirm that all inputs were available at that timestamp.
+- Use point-in-time data where possible and document any limitations.
+
+## Validation Requirements
+
+- Evaluate IC and rank IC over relevant forward-return horizons.
+- Evaluate grouped or quantile forward returns, including monotonicity and spread behavior.
+- Run out-of-sample or walk-forward validation before calling a factor statistically supported.
+- Check robustness across regimes, sectors, market-cap/liquidity buckets, and time windows.
+- Include turnover, capacity, transaction-cost sensitivity, and slippage assumptions when a research simulation uses portfolio-like returns.
+- Report confidence intervals, sample size, missing-data rates, and failure cases.
+- Control for look-ahead bias, survivorship bias, data snooping, overlapping-label effects, and multiple testing.
+
+## Output Rules
+
+- Allowed outputs: research priority, statistical support, confidence level, risk warnings, data-quality warnings, and observation state.
+- Disallowed outputs: buy, sell, short, hold, target price, position size, stop loss, or automated execution instruction.
+- If evidence is weak, conflicting, stale, or based on insufficient data, say so directly.
+

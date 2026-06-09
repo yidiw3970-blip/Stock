@@ -1,0 +1,37 @@
+---
+description: UI and reporting rules for research outputs
+globs: "**/*.tsx,**/*.ts,**/*.jsx,**/*.js,**/*.css,**/*.html,docs/**/*.md"
+alwaysApply: false
+---
+
+# UI Rules
+
+Any future UI should make the research workflow clearer without turning the project into an investment advice product.
+
+## Product Positioning
+
+- The first screen should communicate research status, evidence quality, and data freshness.
+- Do not present any view as a trading cockpit, broker terminal, or execution dashboard.
+- Do not add trade buttons, order tickets, broker account controls, or buy/sell callouts.
+
+## Research Display
+
+- Every factor view should show hypothesis, input data, validation window, IC/rank IC, grouped returns, walk-forward result, and known caveats.
+- Show source and timestamp for every data-backed metric.
+- Clearly label simulated research results as research simulations.
+- Separate hypothesis, statistical evidence, interpretation, and risk warnings.
+- Prefer neutral labels such as "Candidate", "Watch", "Needs More Data", "Statistically Supported", and "Rejected".
+
+## Visual Design
+
+- Use compact, scan-friendly layouts for research tables and dashboards.
+- Use color carefully. Avoid green/red language that implies trade action.
+- Make warnings visible when data is stale, missing, sparse, or statistically weak.
+- Keep charts reproducible by showing the date range, horizon, universe, and grouping method.
+
+## Compliance Guardrails
+
+- Do not display personalized investment advice.
+- Do not display deterministic claims about future returns.
+- Do not hide uncertainty or sample-size limitations.
+
