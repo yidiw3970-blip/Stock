@@ -61,3 +61,11 @@ Forward returns are a research validation target only.
 IC analysis compares factor values available at `date` with forward returns that occur after `date`. The first implementation uses Spearman rank correlation for each date, factor, and horizon.
 
 IC is a research statistic. It can indicate whether a factor has cross-sectional ranking information in a sample, but it does not prove that the relationship will persist. It should be paired with grouped return analysis, walk-forward testing, and risk checks.
+
+## Quantile Analysis
+
+Quantile analysis sorts each date's cross-section into factor buckets and then compares each bucket's future returns. It helps answer whether high factor values and low factor values behaved differently in the historical sample.
+
+The first implementation reports quantile mean returns, median returns, hit rates, counts, top-minus-bottom spreads, spread t-stats, and non-decreasing monotonic share.
+
+These results are validation diagnostics only. They do not include trading costs, liquidity, turnover, or out-of-sample checks, and they must not be interpreted as investment advice.

@@ -59,6 +59,37 @@ This is a simple first-pass diagnostic. A later version should add Newey-West or
 
 IC should be evaluated alongside quantile analysis, walk-forward validation, transaction-cost sensitivity, liquidity constraints, and risk checks before any factor is considered statistically supported.
 
+## Quantile Analysis
+
+Quantile analysis groups stocks by factor value on each observation date and then measures the future returns of each group. For example, with five quantiles, quantile `1` contains the lowest factor values and quantile `5` contains the highest factor values.
+
+The goal is to check whether factor-ranked groups show economically meaningful and reasonably ordered future-return behavior.
+
+Why top versus bottom matters:
+
+- The top-minus-bottom spread shows whether high factor values had higher future returns than low factor values in the sample.
+- The spread is easier to interpret than isolated group means because it compares both tails of the factor ranking.
+- A positive spread can support a hypothesis, but it is not a trading instruction and does not guarantee future returns.
+
+Why IC alone is not enough:
+
+- IC measures rank correlation, but it may hide nonlinear behavior.
+- Quantile analysis can reveal whether performance is concentrated only in one tail.
+- Quantile analysis can show whether middle buckets behave sensibly or erratically.
+- IC and quantile analysis can disagree, which should trigger deeper review.
+
+`monotonic_share` measures the share of date/factor/horizon observations where quantile mean returns are non-decreasing as quantile rises. The first version uses non-decreasing order, so ties are allowed.
+
+The first spread t-stat uses a plain t-stat:
+
+```text
+mean_spread / (std(spread) / sqrt(period_count))
+```
+
+This is a first-pass diagnostic. A later version can add Newey-West or HAC t-statistics to handle time-series autocorrelation in repeated spread observations.
+
+Quantile results are not strategy returns. They do not include turnover, transaction costs, slippage, liquidity limits, borrow costs, capacity, or live execution constraints. They must be paired with walk-forward validation and risk checks before any factor can be considered statistically supported.
+
 ## Lens Features
 
 Serenity Lens features can help structure supply-chain bottleneck hypotheses. JACKAL Lens features can help structure market-tempo hypotheses. Neither source is evidence by itself.
