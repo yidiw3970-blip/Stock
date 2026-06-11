@@ -104,6 +104,12 @@ The first factor module computes trailing price and liquidity features from norm
 
 Definitions are documented in [docs/FACTOR_DEFINITIONS.md](docs/FACTOR_DEFINITIONS.md).
 
+## Research Validation
+
+Forward returns are supported as research labels for later factor validation. They are not same-day features and must not be used as trading instructions.
+
+Research workflow notes are documented in [docs/QUANT_RESEARCH_FRAMEWORK.md](docs/QUANT_RESEARCH_FRAMEWORK.md) and [docs/FACTOR_VALIDATION_RULES.md](docs/FACTOR_VALIDATION_RULES.md).
+
 ## GitHub Update Flow
 
 Repository: <https://github.com/yidiw3970-blip/Stock.git>
@@ -156,7 +162,9 @@ stock-alpha-lab/
   docs/
     DATA_SOURCES.md
     FACTOR_DEFINITIONS.md
+    FACTOR_VALIDATION_RULES.md
     PROJECT_OVERVIEW.md
+    QUANT_RESEARCH_FRAMEWORK.md
   scripts/
     update_prices.py
   src/
@@ -169,6 +177,7 @@ stock-alpha-lab/
       factors/
         price_factors.py
       research/
+        forward_returns.py
       models/
       backtest/
       reports/
