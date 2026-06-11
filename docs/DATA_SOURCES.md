@@ -44,8 +44,21 @@ data/raw/prices.csv
 - Adjusted prices can differ across vendors and adjustment policies.
 - Delistings, symbol changes, corporate actions, and survivorship bias require additional handling.
 - Network failures and provider-side rate limits can interrupt downloads.
+- If yfinance returns `Too Many Requests` or `YFRateLimitError`, reduce the number of tickers, increase `--sleep-seconds`, retry later, or switch to a formal data provider.
 - The data is not point-in-time certified.
 - A successful download does not validate any factor or thesis.
+
+Example limited test run:
+
+```powershell
+python scripts/update_prices.py --tickers NVDA --start 2024-01-01 --sleep-seconds 5
+```
+
+For larger lists, keep requests slow and expect temporary failures:
+
+```powershell
+python scripts/update_prices.py --start 2020-01-01 --sleep-seconds 5 --max-retries 3
+```
 
 ## Future Replacement Options
 

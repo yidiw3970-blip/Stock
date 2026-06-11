@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
+from scripts.update_prices import parse_args, parse_tickers
 from stock_alpha_lab.data_sources import yfinance_client
 from stock_alpha_lab.data_sources.yfinance_client import (
     download_price_history,
@@ -95,10 +96,48 @@ def test_download_price_history_continues_after_ticker_failure(
         return sample_history()
 
     monkeypatch.setattr(yfinance_client.yf, "download", fake_download)
+    monkeypatch.setattr(yfinance_client.time, "sleep", lambda seconds: None)
 
-    df = download_price_history(["good", "bad"], start="2020-01-01")
+    df = download_price_history(
+        ["good", "bad"], start="2020-01-01", sleep_seconds=0
+    )
 
     assert set(df["ticker"]) == {"GOOD"}
+
+
+def test_download_price_history_retries_rate_limit_then_succeeds(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[str] = []
+    sleeps: list[float] = []
+
+    def fake_download(
+        ticker: str,
+        start: str,
+        end: str | None,
+        auto_adjust: bool,
+        progress: bool,
+        threads: bool,
+    ) -> pd.DataFrame:
+        calls.append(ticker)
+        if len(calls) == 1:
+            raise RuntimeError("YFRateLimitError: Too Many Requests. Rate limited.")
+        return sample_history()
+
+    monkeypatch.setattr(yfinance_client.yf, "download", fake_download)
+    monkeypatch.setattr(
+        yfinance_client.time,
+        "sleep",
+        lambda seconds: sleeps.append(seconds),
+    )
+
+    df = download_price_history(
+        ["nvda"], start="2024-01-01", sleep_seconds=5, max_retries=2
+    )
+
+    assert calls == ["NVDA", "NVDA"]
+    assert sleeps == [5]
+    assert set(df["ticker"]) == {"NVDA"}
 
 
 def test_download_price_history_raises_when_all_tickers_fail(
@@ -115,9 +154,10 @@ def test_download_price_history_raises_when_all_tickers_fail(
         raise RuntimeError(f"simulated failure for {ticker}")
 
     monkeypatch.setattr(yfinance_client.yf, "download", fake_download)
+    monkeypatch.setattr(yfinance_client.time, "sleep", lambda seconds: None)
 
-    with pytest.raises(RuntimeError, match="all tickers"):
-        download_price_history(["bad"], start="2020-01-01")
+    with pytest.raises(RuntimeError, match="rate limit.*reduce the number"):
+        download_price_history(["bad"], start="2020-01-01", sleep_seconds=0)
 
 
 def test_save_prices_csv_writes_file(tmp_path: Path) -> None:
@@ -139,3 +179,27 @@ def test_save_prices_csv_writes_file(tmp_path: Path) -> None:
         "adj_close",
         "volume",
     ]
+
+
+def test_parse_tickers_uppercases_comma_separated_values() -> None:
+    assert parse_tickers("nvda, MU,") == ["NVDA", "MU"]
+
+
+def test_parse_args_accepts_tickers_and_rate_limit_options() -> None:
+    args = parse_args(
+        [
+            "--tickers",
+            "NVDA,MU",
+            "--start",
+            "2024-01-01",
+            "--sleep-seconds",
+            "5",
+            "--max-retries",
+            "3",
+        ]
+    )
+
+    assert args.tickers == "NVDA,MU"
+    assert args.start == "2024-01-01"
+    assert args.sleep_seconds == 5
+    assert args.max_retries == 3

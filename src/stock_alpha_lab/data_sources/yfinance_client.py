@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from pathlib import Path
 
 import pandas as pd
@@ -53,28 +54,38 @@ def normalize_yfinance_history(raw_df: pd.DataFrame, ticker: str) -> pd.DataFram
 
 
 def download_price_history(
-    tickers: list[str], start: str, end: str | None = None
+    tickers: list[str],
+    start: str,
+    end: str | None = None,
+    sleep_seconds: float = 2.0,
+    max_retries: int = 2,
 ) -> pd.DataFrame:
     """Download and normalize OHLCV price history for research use."""
 
     frames: list[pd.DataFrame] = []
+    normalized_tickers = _normalize_tickers(tickers)
 
-    for ticker in _normalize_tickers(tickers):
-        try:
-            raw_df = yf.download(
-                ticker,
-                start=start,
-                end=end,
-                auto_adjust=False,
-                progress=False,
-                threads=False,
-            )
-            frames.append(normalize_yfinance_history(raw_df, ticker))
-        except Exception as exc:  # noqa: BLE001
-            logger.warning("Failed to download price history for %s: %s", ticker, exc)
+    for index, ticker in enumerate(normalized_tickers):
+        downloaded = _download_single_ticker(
+            ticker=ticker,
+            start=start,
+            end=end,
+            sleep_seconds=sleep_seconds,
+            max_retries=max_retries,
+        )
+        if downloaded is not None:
+            frames.append(downloaded)
+
+        if index < len(normalized_tickers) - 1:
+            time.sleep(sleep_seconds)
 
     if not frames:
-        raise RuntimeError("Failed to download price history for all tickers.")
+        raise RuntimeError(
+            "Failed to download price history for all tickers. This may be a "
+            "temporary yfinance/Yahoo rate limit. Try again later, reduce the "
+            "number of tickers, increase sleep_seconds, or use a formal data "
+            "source such as Polygon, Tiingo, or Alpha Vantage."
+        )
 
     return pd.concat(frames, ignore_index=True).sort_values(["ticker", "date"])
 
@@ -97,6 +108,59 @@ def _flatten_columns(df: pd.DataFrame) -> pd.DataFrame:
         for column in flattened.columns.to_flat_index()
     ]
     return flattened
+
+
+def _download_single_ticker(
+    ticker: str,
+    start: str,
+    end: str | None,
+    sleep_seconds: float,
+    max_retries: int,
+) -> pd.DataFrame | None:
+    attempts = max_retries + 1
+
+    for attempt in range(1, attempts + 1):
+        try:
+            raw_df = yf.download(
+                ticker,
+                start=start,
+                end=end,
+                auto_adjust=False,
+                progress=False,
+                threads=False,
+            )
+            return normalize_yfinance_history(raw_df, ticker)
+        except Exception as exc:  # noqa: BLE001
+            if _is_rate_limit_error(exc):
+                logger.warning(
+                    "Rate limited while downloading %s on attempt %s/%s: %s",
+                    ticker,
+                    attempt,
+                    attempts,
+                    exc,
+                )
+                if attempt < attempts:
+                    time.sleep(sleep_seconds)
+                    continue
+            else:
+                logger.warning(
+                    "Failed to download price history for %s on attempt %s/%s: %s",
+                    ticker,
+                    attempt,
+                    attempts,
+                    exc,
+                )
+            return None
+
+    return None
+
+
+def _is_rate_limit_error(exc: Exception) -> bool:
+    message = f"{type(exc).__name__}: {exc}".lower()
+    return any(
+        marker in message
+        for marker in ("rate limit", "ratelimit", "too many requests")
+    )
 
 
 def _move_index_to_date_column(df: pd.DataFrame) -> pd.DataFrame:
