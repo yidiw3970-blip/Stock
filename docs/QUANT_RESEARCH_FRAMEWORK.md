@@ -92,4 +92,25 @@ Look-ahead controls:
 
 Walk-forward validation still cannot solve every problem. It does not remove survivorship bias, stale or revised data, poor vendor quality, overfitting, transaction costs, liquidity constraints, or capacity issues. It is one required validation layer, not proof of future performance.
 
+## Prediction Model Skeletons
+
+The first model layer contains two simple walk-forward research models:
+
+- Ridge return model: predicts a future `forward_return` or future excess-return target from validated factor columns.
+- Logistic outperform model: predicts the probability that a stock enters the same-date forward-return top 20% group for a chosen horizon.
+
+Both models are research diagnostics. Their outputs are not buy/sell signals, target prices, allocation instructions, or proof of future performance.
+
+Required leakage controls:
+
+- Every fit must happen inside a walk-forward training window.
+- Test-window rows must never be used in model fitting.
+- `StandardScaler` must be fit on training rows only, then applied to the test rows.
+- Model weights must be learned from earlier dates and evaluated only on later dates.
+- Forward-return and outperform targets are validation labels, not live features.
+
+Ridge can be useful for testing whether a small group of factors has linear information about future returns or future excess returns. Logistic outperform modeling can be useful for testing whether factors help identify stocks that later rank in the top part of the same-date cross-section.
+
+These first-pass models still require careful review of sample size, out-of-sample stability, transaction costs, liquidity, turnover, feature drift, sector concentration, and overfitting risk.
+
 Research only. Not financial advice.

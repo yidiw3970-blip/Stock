@@ -108,7 +108,7 @@ Definitions are documented in [docs/FACTOR_DEFINITIONS.md](docs/FACTOR_DEFINITIO
 
 Forward returns are supported as research labels for later factor validation. They are not same-day features and must not be used as trading instructions.
 
-Walk-forward validation is supported as a chronological train/test framework. It does not implement a specific prediction model, run a backtest, or produce recommendations.
+Walk-forward validation is supported as a chronological train/test framework. The project also includes first-pass Ridge return and Logistic outperform model skeletons for sample-out research. These models do not run a backtest or produce recommendations.
 
 Research workflow notes are documented in [docs/QUANT_RESEARCH_FRAMEWORK.md](docs/QUANT_RESEARCH_FRAMEWORK.md) and [docs/FACTOR_VALIDATION_RULES.md](docs/FACTOR_VALIDATION_RULES.md).
 

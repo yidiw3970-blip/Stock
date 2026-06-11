@@ -107,6 +107,22 @@ Passing walk-forward validation is still not enough by itself. Results must be r
 
 Research only. Not financial advice.
 
+## Predictive Model Rules
+
+Only factors with reasonable IC and quantile-analysis diagnostics should be considered for predictive model experiments. A model should not be used to rescue an unvalidated factor simply because the model output looks interesting.
+
+Ridge return models are allowed as research tools for estimating future return or future excess-return targets. Logistic outperform models are allowed as research tools for estimating whether a stock later enters the same-date top forward-return group.
+
+Required model rules:
+
+- Model weights must be learned only from the training window.
+- Scalers and other learned transformations must be fit only on training rows.
+- Test windows are for evaluation only, not feature selection or manual tuning.
+- Repeated changes based on test-window results must not be presented as genuine out-of-sample evidence.
+- Model predictions are research signals, not trade instructions.
+
+Research only. Not financial advice.
+
 ## Lens Features
 
 Serenity Lens features can help structure supply-chain bottleneck hypotheses. JACKAL Lens features can help structure market-tempo hypotheses. Neither source is evidence by itself.
