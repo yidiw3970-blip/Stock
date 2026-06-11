@@ -67,6 +67,37 @@ streamlit run src/stock_alpha_lab/ui/app.py
 
 The initial app only shows project status and research-only warnings.
 
+## Price Data Prototype
+
+The project includes a yfinance-based downloader for research prototypes only. The project does not claim yfinance is an official Yahoo data source, and downloaded prices must not be treated as production-grade or guaranteed for live trading.
+
+Run the default price update:
+
+```powershell
+python scripts/update_prices.py --start 2020-01-01
+```
+
+The script reads tickers from `data/watchlists/supply_chain_map.csv` and writes normalized OHLCV data to:
+
+```text
+data/raw/prices.csv
+```
+
+Supported options:
+
+```powershell
+python scripts/update_prices.py --start 2020-01-01 --end 2026-01-01 --output data/raw/prices.csv
+```
+
+Downloaded data is for research only. Not financial advice. No auto-trading.
+
+Data quality limitations:
+
+- yfinance is suitable here only as a convenient research prototype connector.
+- Data may be delayed, revised, incomplete, adjusted differently than expected, or unavailable for some tickers.
+- A failed ticker download is logged and skipped so other tickers can continue.
+- Any serious research result should document the data source, timestamp, adjustment policy, and known gaps.
+
 ## GitHub Update Flow
 
 Repository: <https://github.com/yidiw3970-blip/Stock.git>
@@ -117,14 +148,17 @@ stock-alpha-lab/
     processed/
     watchlists/
   docs/
+    DATA_SOURCES.md
     PROJECT_OVERVIEW.md
   scripts/
+    update_prices.py
   src/
     stock_alpha_lab/
       __init__.py
       config.py
       cli.py
       data_sources/
+        yfinance_client.py
       factors/
       research/
       models/
