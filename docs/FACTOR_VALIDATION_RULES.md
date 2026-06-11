@@ -28,6 +28,37 @@ Each step answers a different question:
 - A single good backtest or attractive chart is not enough evidence.
 - Validation must report sample size, missing-data rates, time coverage, and fragility.
 
+## Information Coefficient
+
+Information Coefficient, or IC, measures the cross-sectional relationship between factor values and future returns on the same observation date and horizon.
+
+The first implementation uses Spearman rank correlation because factor research usually cares about whether a feature ranks stocks in a useful order, not whether the raw feature and future returns have a linear relationship.
+
+The connection is:
+
+```text
+factor values at date -> forward returns after date -> daily Spearman IC
+```
+
+For each `date`, `factor_name`, and `horizon`, the project aligns factor values with forward returns by `date` and `ticker`, drops missing values, and computes the rank correlation. If the cross-section is too small or either side is constant, IC remains missing.
+
+Interpretation boundaries:
+
+- Positive IC is statistical support, not a guaranteed future return.
+- Negative IC can indicate inverse relationship, instability, or data issues.
+- IC must be interpreted with sample size, coverage, and regime context.
+- IC cannot be used alone as the final decision rule.
+
+The first summary uses a plain t-stat:
+
+```text
+mean_ic / (ic_std / sqrt(ic_count))
+```
+
+This is a simple first-pass diagnostic. A later version should add Newey-West or HAC t-statistics to address time-series autocorrelation in daily IC observations.
+
+IC should be evaluated alongside quantile analysis, walk-forward validation, transaction-cost sensitivity, liquidity constraints, and risk checks before any factor is considered statistically supported.
+
 ## Lens Features
 
 Serenity Lens features can help structure supply-chain bottleneck hypotheses. JACKAL Lens features can help structure market-tempo hypotheses. Neither source is evidence by itself.
