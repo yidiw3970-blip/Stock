@@ -69,3 +69,27 @@ Quantile analysis sorts each date's cross-section into factor buckets and then c
 The first implementation reports quantile mean returns, median returns, hit rates, counts, top-minus-bottom spreads, spread t-stats, and non-decreasing monotonic share.
 
 These results are validation diagnostics only. They do not include trading costs, liquidity, turnover, or out-of-sample checks, and they must not be interpreted as investment advice.
+
+## Walk-Forward Validation
+
+Walk-forward validation tests a research workflow in chronological order. Each split uses an earlier training window and a later testing window.
+
+Financial time series should not be randomly split because random shuffling can leak future regimes, future cross-sectional information, and post-event data into training. The validation order must respect what would have been known at the time.
+
+Window terms:
+
+- `train_years`: length of the rolling historical training window.
+- `test_months`: length of the forward test window.
+- `step_months`: how far the test window advances after each split. When `step_months` equals `test_months`, test windows do not overlap.
+- `min_train_obs`: minimum training rows required to keep a split.
+
+Look-ahead controls:
+
+- Training dates must be strictly earlier than testing dates.
+- Test data must never participate in model fitting.
+- Model tuning should happen inside training windows only.
+- Test windows are for evaluation, not repeated manual adjustment.
+
+Walk-forward validation still cannot solve every problem. It does not remove survivorship bias, stale or revised data, poor vendor quality, overfitting, transaction costs, liquidity constraints, or capacity issues. It is one required validation layer, not proof of future performance.
+
+Research only. Not financial advice.

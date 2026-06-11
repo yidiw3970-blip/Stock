@@ -90,6 +90,23 @@ This is a first-pass diagnostic. A later version can add Newey-West or HAC t-sta
 
 Quantile results are not strategy returns. They do not include turnover, transaction costs, slippage, liquidity limits, borrow costs, capacity, or live execution constraints. They must be paired with walk-forward validation and risk checks before any factor can be considered statistically supported.
 
+## Walk-Forward Validation
+
+After a factor has passed basic IC and quantile diagnostics, it still needs walk-forward validation. Walk-forward validation checks whether the research workflow holds up when training uses only past data and testing uses later unseen data.
+
+Required rules:
+
+- Model weights, transformations, and learned parameters must come only from the training window.
+- The test window is for evaluation only.
+- Test data must not be used for fitting, feature selection, or parameter tuning.
+- Random shuffle is not allowed for financial time-series validation.
+- Training dates must be strictly earlier than test dates.
+- Repeated manual tuning based on test-window results must not be presented as genuine out-of-sample evidence.
+
+Passing walk-forward validation is still not enough by itself. Results must be reviewed with transaction costs, liquidity, turnover, data quality, survivorship bias, regime dependence, and multiple-testing controls.
+
+Research only. Not financial advice.
+
 ## Lens Features
 
 Serenity Lens features can help structure supply-chain bottleneck hypotheses. JACKAL Lens features can help structure market-tempo hypotheses. Neither source is evidence by itself.
