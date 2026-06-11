@@ -148,3 +148,12 @@ These factors are raw research features. They require validation before use in a
 - Data-quality checks for missing prices, corporate actions, stale symbols, and vendor revisions.
 
 Passing factor calculation does not imply statistical support. These fields must not be displayed or described as recommendations.
+
+## Lens-Based Candidate Features
+
+The project also includes first-pass candidate feature engineering inspired by public market-research styles:
+
+- Serenity Lens features are documented in [SERENITY_LENS.md](SERENITY_LENS.md).
+- JACKAL Lens features are documented in [JACKAL_LENS.md](JACKAL_LENS.md).
+
+These modules create transparent hypothesis-strength fields for research triage only. They are not composite alpha scores, buy/sell signals, timing recommendations, or evidence of statistical validity.
