@@ -98,6 +98,12 @@ Data quality limitations:
 - A failed ticker download is logged and skipped so other tickers can continue.
 - Any serious research result should document the data source, timestamp, adjustment policy, and known gaps.
 
+## Price Factors
+
+The first factor module computes trailing price and liquidity features from normalized OHLCV data. It does not download data, run a backtest, create a composite score, or produce recommendations.
+
+Definitions are documented in [docs/FACTOR_DEFINITIONS.md](docs/FACTOR_DEFINITIONS.md).
+
 ## GitHub Update Flow
 
 Repository: <https://github.com/yidiw3970-blip/Stock.git>
@@ -149,6 +155,7 @@ stock-alpha-lab/
     watchlists/
   docs/
     DATA_SOURCES.md
+    FACTOR_DEFINITIONS.md
     PROJECT_OVERVIEW.md
   scripts/
     update_prices.py
@@ -160,6 +167,7 @@ stock-alpha-lab/
       data_sources/
         yfinance_client.py
       factors/
+        price_factors.py
       research/
       models/
       backtest/
